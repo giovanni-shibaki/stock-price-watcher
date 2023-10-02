@@ -30,7 +30,7 @@ namespace StockPriceWatcher.Interfaces
                 // Do nothing
             }
 
-            public virtual void IObserver<Stock>.OnNext(Stock value)
+            public virtual void OnNext(Stock value)
             {
                 Console.WriteLine("Stock data: ");
 
