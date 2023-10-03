@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MimeKit;
 
 namespace StockPriceWatcher.Classes
 {
     internal class Config
     {
-        public List<string> alertEmails { get; set; }
+        public List<string>? AlertEmails { get; set; }
 
+        public Config(string emailsFilePath, string smtpConfigFilePath)
+        {
+
+        }
     }
 }

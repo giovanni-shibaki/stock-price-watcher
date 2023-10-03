@@ -10,10 +10,16 @@
                 Console.WriteLine("Insuficient arguments!\nNeeded: 3\nUsage: program.exe <Stock Symbol> <Sell Price> <Buy Price>");
                 return;            
             }
-            
+
             // Check for config file
+            String path = Directory.GetParent(Directory.GetCurrentDirectory())!.Parent!.Parent!.FullName;
+            if(!(File.Exists($@"{path}\Config\emails.txt") && File.Exists($@"{path}\Config\smtpConfig.txt")))
+            {
+                Console.WriteLine("No configuration files found! Please check if both emails.txt and smtpConfig.txt files are inside the Config directory");
+                return;
+            }
 
-
+            // Read 
 
             HttpClient client = new HttpClient();
 

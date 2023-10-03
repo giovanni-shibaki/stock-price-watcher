@@ -7,5 +7,8 @@ global using global::System.IO;
 global using global::System.Threading;
 global using global::System.Net.Http;
 
+global using global::MimeKit;
+global using global::MailKit.Net.Smtp;
+
 global using StockPriceWatcher.Interfaces;
 global using StockPriceWatcher.Classes;

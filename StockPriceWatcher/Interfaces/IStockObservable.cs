@@ -66,7 +66,12 @@ namespace StockPriceWatcher.Interfaces
 
                             JsonNode stockNode = JsonNode.Parse(result)!;
 
-                            symbolQ = JsonSerializer.Deserialize<SymbolQuotation>(stockNode!["results"]![0]!.ToJsonString());
+                            JsonSerializerOptions options = new JsonSerializerOptions()
+                            {
+                                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+                            };
+
+                            symbolQ = JsonSerializer.Deserialize<SymbolQuotation>(stockNode!["results"]![0]!.ToJsonString(), options);
                         }
                         else if (res.StatusCode == HttpStatusCode.NotFound) // Did not find the chosen symbol
                         {
