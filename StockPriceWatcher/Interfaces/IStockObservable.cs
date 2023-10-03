@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Net;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -15,10 +17,11 @@ namespace StockPriceWatcher.Interfaces
 
             // TODO: Input updateDelay from config file
             private readonly int updateDelay = 1800000; // 1800000 miliseconds = 30 minutes (This API free version only updates the data every 30 minutes)
-            public StockWatcher(string token)
+            public StockWatcher(string token, int updateDelay)
             {
                 this.observers = new List<IObserver<Stock>>();
                 this.token = token;
+                this.updateDelay = updateDelay;
             }
 
             private class Unsubscriber : IDisposable
@@ -49,29 +52,54 @@ namespace StockPriceWatcher.Interfaces
             public async Task GetStock(HttpClient client, Stock stock)
             {
                 string queryURL = string.Format("https://brapi.dev/api/quote/{0}?token={1}&fundamental=true&dividends=false", stock.Symbol, this.token);
-                JsonNode JsonResult = null;
+                SymbolQuotation? symbolQ = new SymbolQuotation();
 
-                try
+                while(true)
                 {
-                    HttpResponseMessage res = await client.GetAsync(queryURL);
-                    res.EnsureSuccessStatusCode();
-                    string result = await res.Content.ReadAsStringAsync();
+                    try
+                    {
+                        HttpResponseMessage res = await client.GetAsync(queryURL);
 
-                    JsonNode stockNode = JsonNode.Parse(result)!;
+                        if (res.StatusCode == HttpStatusCode.OK) // Sucess -> Will return all the data from the chosen symbol
+                        {
+                            string result = await res.Content.ReadAsStringAsync();
 
-                    JsonResult = stockNode!["results"]![0]!;
+                            JsonNode stockNode = JsonNode.Parse(result)!;
 
-                    if (JsonResult == null)
-                        throw new Exception("Error parsing result JSON");
+                            symbolQ = JsonSerializer.Deserialize<SymbolQuotation>(stockNode!["results"]![0]!.ToJsonString());
+                        }
+                        else if (res.StatusCode == HttpStatusCode.NotFound) // Did not find the chosen symbol
+                        {
+                            Console.WriteLine($"Could not find input symbol '{stock.Symbol}'. Please verify the inputed symbol\n");
+                            return;
+                        }
+                        else // HttpStatusCode.BadRequest -> Invalid token / API key
+                        {
+                            Console.WriteLine($"Invalid token / key! Please verify the configuration file\n");
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"{ex.Message}\n");
+                    }
+
+                    // Compare the current price (regularMarketPrice) with the sell / buy prices
+                    stock.RegularMarketPrice = symbolQ!.regularMarketPrice;
+
+                    if(stock.RegularMarketPrice < stock.BuyPrice || stock.RegularMarketPrice > stock.SellPrice)
+                    {
+                        foreach (var observer in observers.ToArray())
+                        {
+                            if(observer != null)
+                            {
+                                observer.OnNext(stock);
+                            }
+                        }
+                    }
+                    // Now sleep for updateDelay minutes
+                    Thread.Sleep(updateDelay);
                 }
-                catch (Exception ex)
-                {
-
-                }
-
-                //Console.WriteLine($"{JsonResult!["regularMarketPrice"]}\n");
-
-                
             }
         }
     }

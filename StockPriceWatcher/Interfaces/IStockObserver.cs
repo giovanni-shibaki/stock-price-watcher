@@ -30,18 +30,20 @@ namespace StockPriceWatcher.Interfaces
                 // Do nothing
             }
 
-            public virtual void OnNext(Stock value)
+            public virtual void OnNext(Stock currentStock)
             {
                 Console.WriteLine("Stock data: ");
 
                 if(first)
                 {
-                    last = value;
+                    last = currentStock;
                     first = false;
+
+                    // Send email
                 }
                 else
                 {
-                    // Change
+                    // Send email
                 }
             }
         }
