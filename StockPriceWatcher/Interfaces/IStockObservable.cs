@@ -1,7 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -14,9 +11,8 @@ namespace StockPriceWatcher.Interfaces
         {
             private List<IObserver<Stock>> observers;
             private string token;
-
-            // TODO: Input updateDelay from config file
             private readonly int updateDelay = 1800000; // 1800000 miliseconds = 30 minutes (This API free version only updates the data every 30 minutes)
+            
             public StockWatcher(string token, int updateDelay)
             {
                 this.observers = new List<IObserver<Stock>>();
@@ -94,6 +90,7 @@ namespace StockPriceWatcher.Interfaces
 
                     if(stock.RegularMarketPrice < stock.BuyPrice || stock.RegularMarketPrice > stock.SellPrice)
                     {
+                        Console.WriteLine($"Current Regular Market Price is lower than buyPrice ({stock.BuyPrice}) or higher than sellPrice ({stock.SellPrice}). Current Regular Market Price: {stock.RegularMarketPrice}. Sending emails...");
                         foreach (var observer in observers.ToArray())
                         {
                             if(observer != null)
@@ -102,6 +99,11 @@ namespace StockPriceWatcher.Interfaces
                             }
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine($"No need to notify. Current Regular Market Price: {stock.RegularMarketPrice}");
+                    }
+
                     // Now sleep for updateDelay minutes
                     Thread.Sleep(updateDelay);
                 }

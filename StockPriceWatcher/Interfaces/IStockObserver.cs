@@ -6,9 +6,17 @@ namespace StockPriceWatcher.Interfaces
     {
         public class StockObserver : IObserver<Stock>
         {
-            private IDisposable unsubscriber;
+            private IDisposable? unsubscriber;
             private bool first = true;
-            private Stock last;
+            private Stock? last;
+            private MailHandler mailHandler;
+            private string email;
+
+            public StockObserver(MailHandler mailHandler, string email)
+            {
+                this.mailHandler = mailHandler;
+                this.email = email;
+            }
 
             public virtual void Subscribe(IObservable<Stock> provider)
             {
@@ -17,7 +25,7 @@ namespace StockPriceWatcher.Interfaces
 
             public virtual void Unsubscribe()
             {
-                unsubscriber.Dispose();
+                unsubscriber!.Dispose();
             }
 
             public virtual void OnCompleted()
@@ -32,18 +40,18 @@ namespace StockPriceWatcher.Interfaces
 
             public virtual void OnNext(Stock currentStock)
             {
-                Console.WriteLine("Stock data: ");
+                Console.WriteLine($"OnNext() of {this.email}");
 
                 if(first)
                 {
                     last = currentStock;
                     first = false;
 
-                    // Send email
+                    mailHandler.sendEmail(this.email, currentStock);
                 }
                 else
                 {
-                    // Send email
+                    mailHandler.sendEmail(this.email, currentStock);
                 }
             }
         }

@@ -15,7 +15,7 @@
             this.Password = password;
         }
 
-        public void sendEmail(string to)
+        public void sendEmail(string to, Stock stock)
         {
             MimeMessage email = new MimeMessage();
 

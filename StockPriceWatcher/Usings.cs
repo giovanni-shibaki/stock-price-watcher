@@ -12,3 +12,4 @@ global using global::MailKit.Net.Smtp;
 
 global using StockPriceWatcher.Interfaces;
 global using StockPriceWatcher.Classes;
+global using static StockPriceWatcher.Interfaces.IStockObserver;

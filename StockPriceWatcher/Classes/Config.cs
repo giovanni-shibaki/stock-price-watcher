@@ -1,6 +1,4 @@
-﻿using MimeKit;
-
-namespace StockPriceWatcher.Classes
+﻿namespace StockPriceWatcher.Classes
 {
     internal class Config
     {
