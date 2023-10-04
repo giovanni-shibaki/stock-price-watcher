@@ -2,10 +2,13 @@
 
 namespace StockPriceWatcher
 {
-    class Program
+    class StockPriceWatcher
     {
         static async Task Main(string[] args)
         {
+            // Initial config to check for arguments, and set config variables
+            InitialConfig configVariables = new InitialConfig();
+
             // Check for arguments
             if (args.Length != 3)
             {
@@ -44,7 +47,7 @@ namespace StockPriceWatcher
             string ApiKey = root.GetSection("APIToken").Value!;
             int updateDelay = Int32.Parse(root.GetSection("updateDelay").Value!);
 
-            IStockObservable.StockWatcher stockWatcher = new IStockObservable.StockWatcher(ApiKey, updateDelay);
+            StockMonitor stockWatcher = new StockMonitor(ApiKey, updateDelay);
             Stock stock = new Stock(stockSymbol, 0, sellPrice, buyPrice);
 
             // Now, set the list of emails to subscribe to the observable
@@ -54,7 +57,7 @@ namespace StockPriceWatcher
             List<string> emailsToNotify = new List<string>();
             foreach (var email in enumEmails)
             {
-                new StockObserver(mailHandler, email.Value!).Subscribe(stockWatcher);
+                new StockReporter(mailHandler, email.Value!).Subscribe(stockWatcher);
             }
 
             // Initiate the Watcher
