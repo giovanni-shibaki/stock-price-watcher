@@ -2,7 +2,7 @@
 
 ## Overview
 
-Stock Price Watcher is a command-line application designed to monitor stock prices on the B3 (The primary financial exchange in Brazil) stock exchange and notify users via email when the price of a specified asset falls below a certain threshold for selling or rises above another threshold for buying. This console-based tool operates without a graphical interface and provides a convenient way to stay informed about market conditions.
+Stock Price Watcher is a C# command-line application designed to monitor stock prices on the B3 stock exchange (The primary financial exchange in Brazil) and notify users via email when the price of a specified asset falls below a certain threshold for selling or rises above another threshold for buying. This console-based tool operates without a graphical interface and provides a convenient way to stay informed about market conditions.
 
 ## Configuration
 
@@ -31,6 +31,10 @@ Here's an example of the configuration file:
     "updateDelay": 1800000
 }
 ```
+
+The API used on this project is provided by [Brapi](https://brapi.dev/) using their free licence. Therefore, the Deserialization for the response JSON file follows their API structure.
+
+For the SMTP server, this project uses a free testing SMTP server provided by [MailTrap](https://mailtrap.io/) using their free licence.
 
 ## Usage
 
