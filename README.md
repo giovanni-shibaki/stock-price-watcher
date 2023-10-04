@@ -6,7 +6,7 @@ Stock Price Watcher is a C# command-line application designed to monitor stock p
 
 ## Configuration
 
-Before using Stock Price Watcher, you need to set up a configuration file in JSON format. This file should include the following information:
+Before using Stock Price Watcher, you need to set up a configuration file in JSON format with the name **appsettings.json**. This file should include the following information:
 
 - A list of destination email addresses for alerts.
 - SMTP server access credentials for sending emails.
@@ -44,13 +44,13 @@ To use Stock Price Watcher, follow these steps:
 
 2. Build the application using your C# compiler.
 
-3. Create the JSON configuration file (as shown above) and save it as `config.json` in the project directory.
+3. Create the JSON configuration file (as shown above) and save it as `appsettings.json` in the project directory.
 
 4. Open a terminal or command prompt and navigate to the project directory.
 
 5. Run the application with the following command, providing three command-line arguments:
 
-   - The first argument is the symbol of the asset to monitor (e.g., AAPL for Apple Inc.).
+   - The first argument is the symbol of the asset to monitor (e.g., PETR4).
    - The second argument is the reference price for selling.
    - The third argument is the reference price for buying.
 
@@ -66,24 +66,12 @@ To use Stock Price Watcher, follow these steps:
 
 Stock Price Watcher utilizes the Observer design pattern to handle its functionality. In this pattern:
 
-- The stock price data is the subject being observed.
-- The email notification system acts as an observer.
-- When price changes occur, the subject (stock price) notifies its observers (email notification system) automatically.
+- The **StockMonitor** acts as the Observable class, periodically (following the defined updateDelay) calls for the API and get the Regular Market Price for the specified stock Symbol, and notifying the subscribed Observers if necessary.
+- The **StockReporter** acts as the Observer class, receiving notifications from the StockMonitor and calling the **MailHandler** class to send an email to the registered email addresses.
+-  When price changes occur, the Observable (StockMonitor) notifies its observers (StockReporter) automatically.
 
-This design pattern allows for a decoupled and extensible system, where additional observers (e.g., SMS notifications) can be easily added without modifying the core logic.
+This design pattern allows for a decoupled and extensible system, where additional observers can be easily added without modifying the core logic.
 
 ## How It Works
 
-Once Stock Price Watcher is initiated with the correct command-line arguments and configuration file, it performs the following steps:
-
-1. Connects to the Brapi API using the provided API key.
-
-2. Periodically checks the market price of the specified asset, as defined by the update delay in the configuration file.
-
-3. Compares the current market price to the predefined buying and selling thresholds.
-
-4. If the current price falls below the selling threshold or rises above the buying threshold, the system sends email alerts to all registered email addresses, suggesting either buying or selling the asset.
-
-5. The system continues to monitor the market and sends alerts whenever the price crosses the specified thresholds.
-
-By following these instructions, you can effectively use Stock Price Watcher to receive timely notifications about potential stock trading opportunities based on your predefined criteria.
+TODO
