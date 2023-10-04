@@ -19,8 +19,7 @@ namespace StockPriceWatcher.Classes
         {
             if (args.Length != 3)
             {
-                Console.WriteLine("Insuficient arguments!\nNeeded: 3\nUsage: program.exe <Stock Symbol> <Sell Price> <Buy Price>");
-                return;
+                throw new Exception("Insuficient arguments!\nNeeded: 3\nUsage: program.exe <Stock Symbol> <Sell Price> <Buy Price>");
             }
 
             try
@@ -31,13 +30,19 @@ namespace StockPriceWatcher.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error converting arguments!");
-                return;
+                throw new Exception("Error converting arguments!");
             }
 
             // Reading config file and setting mailHandler
-            IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true);
-            IConfigurationRoot root = builder.Build();
+            IConfigurationBuilder builder;
+            IConfigurationRoot root;
+            try {
+                builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true);
+                root = builder.Build();
+            } catch(Exception ex)
+            {
+                throw new Exception("Configuration not found! (appsettings.json).");
+            }
             IConfigurationSection SMTPSettingsSection = root.GetSection("SMTPSettings");
 
             this.SMTPServer = SMTPSettingsSection["Server"];

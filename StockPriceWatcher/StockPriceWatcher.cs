@@ -7,7 +7,14 @@ namespace StockPriceWatcher
         static async Task Main(string[] args)
         {
             // Initial config to check for arguments, and set config variables
-            InitialConfiguration configVariables = new InitialConfiguration(args);
+            InitialConfiguration configVariables;
+            try {
+                configVariables = new InitialConfiguration(args);
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
 
             MailHandler mailHandler = new MailHandler(configVariables.SMTPServer!, Int32.Parse(configVariables.SMTPPort!), configVariables.SMTPUsername!, configVariables.SMTPPassword!);
 
