@@ -22,10 +22,16 @@
             email.From.Add(new MailboxAddress("", this.Username));
             email.To.Add(new MailboxAddress("", to));
 
-            email.Subject = "Testing out email sending";
+            email.Subject = "Stock Price Alert";
             email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
-                Text = "<b>Hello all the way from the land of C#</b>"
+                Text =  $"<p>Dear {to},</p>\r\n" +
+                        $"<p>The stock price for symbol {stock.Symbol} has reached an important threshold:</p>\r\n" +
+                        $"<ul>\r\n<li><strong>Current Price:</strong> {stock.RegularMarketPrice}</li>\r\n" +
+                        $"<li><strong>Buy Price:</strong> {stock.BuyPrice}</li>\r\n<li><strong>" +
+                        $"Sell Price:</strong> {stock.SellPrice}</li>\r\n</ul>\r\n" +
+                        $"<p>Please take appropriate action based on the current market conditions.</p>\r\n" +
+                        $"<p>Thank you for using our stock price alert service.</p>"
             };
 
             using (var smtp = new SmtpClient())

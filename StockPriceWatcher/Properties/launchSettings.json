@@ -2,7 +2,7 @@
   "profiles": {
     "StockPriceWatcher": {
       "commandName": "Project",
-      "commandLineArgs": "PETR4 35 32,3"
+      "commandLineArgs": "PETR4 35 33,3"
     }
   }
 }
