@@ -2,11 +2,11 @@
 
 ## Overview
 
-Stock Price Watcher is a C# command-line application designed to monitor stock prices on the B3 stock exchange (The primary financial exchange in Brazil) and notify users via email when the price of a specified asset falls below a certain threshold for selling or rises above another threshold for buying. This console-based tool operates without a graphical interface and provides a convenient way to stay informed about market conditions.
+Stock Price Watcher is a C# command-line application designed to monitor stock prices on the B3 stock exchange (The primary financial exchange in Brazil) and notify users via email when the price of a specified asset falls below a certain threshold for buying or rises above another threshold for selling. This console-based tool operates without a graphical interface and provides a convenient way to stay informed about market conditions.
 
 ## Configuration
 
-Before using Stock Price Watcher, you need to set up a configuration file in JSON format with the name **appsettings.json**. This file should include the following information:
+Before using Stock Price Watcher, you need to set up a configuration file in JSON format with the name **appsettings.json** on the same folder as the **StockPriceWatcher.exe** file. This file should include the following information:
 
 - A list of destination email addresses for alerts.
 - SMTP server access credentials for sending emails.
@@ -44,7 +44,7 @@ To use Stock Price Watcher, follow these steps:
 
 2. Build the application using your C# compiler.
 
-3. Create the JSON configuration file (as shown above) and save it as `appsettings.json` in the project directory.
+3. Create the JSON configuration file (as shown above) and save it as `appsettings.json` in the project directory (the same one of the executable file).
 
 4. Open a terminal or command prompt and navigate to the project directory.
 
@@ -60,7 +60,7 @@ To use Stock Price Watcher, follow these steps:
    .\StockPriceWatcher.exe PETR4 35 33,3
    ```
 
-6. Stock Price Watcher will continuously monitor the stock's market price using the provided API key and update delay. When the price falls below the selling threshold or rises above the buying threshold, the system will send email alerts to the specified recipients.
+6. Stock Price Watcher will continuously monitor the stock's market price using the provided API key and update delay. When the price falls below the buying threshold or rises above the selling threshold, the system will send email alerts to the specified recipients.
 
 ## Observer Design Pattern
 
@@ -71,7 +71,3 @@ Stock Price Watcher utilizes the Observer design pattern to handle its functiona
 -  When price changes occur, the Observable (StockMonitor) notifies its observers (StockReporter) automatically.
 
 This design pattern allows for a decoupled and extensible system, where additional observers can be easily added without modifying the core logic.
-
-## How It Works
-
-TODO
